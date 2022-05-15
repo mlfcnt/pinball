@@ -9,3 +9,7 @@ export type StyledBallProps = {
   positionFromTop: number;
   positionFromLeft: number;
 };
+export type StyledPuckProps = {
+  positionFromLeft: number;
+  positionFromTop: number;
+};

@@ -2,7 +2,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useBallPosition } from "../lib/BallPosition";
-import { Ball as BallType, StyledBallProps } from "../types";
+import { StyledBallProps } from "../types";
 
 export const StyledBall = styled.span<StyledBallProps>`
   font-size: 140%;
@@ -19,6 +19,7 @@ export const Ball = () => {
       src="https://upload.wikimedia.org/wikipedia/commons/9/9b/DVD_logo.svg"
       width={100}
       height={100}
+      alt="dvd player icon"
     />
   );
 

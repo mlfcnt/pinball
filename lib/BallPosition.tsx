@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useInterval } from "react-use";
 
 export const framesPerSeconds = (expected: number) => 1000 / expected;
@@ -20,6 +20,12 @@ export const useBallPosition = () => {
     top: 0,
     bottom: 95,
   };
+
+  useEffect(() => {
+    if (positionFromTop === EDGES.bottom) {
+      alert("perdu !");
+    }
+  }, [EDGES.bottom, positionFromTop]);
 
   const ballSpeed = 99;
 
@@ -78,5 +84,7 @@ export const useBallPosition = () => {
   return {
     positionFromTop,
     positionFromLeft,
+    setVerticalDirection,
+    verticalDirection,
   };
 };
