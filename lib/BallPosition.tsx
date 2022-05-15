@@ -1,33 +1,33 @@
-import { useEffect, useState } from "react";
-import { useInterval } from "react-use";
+import { Dispatch, useEffect, useState } from "react";
+import { HorizontalDirection, VerticalDirection } from "../pages";
+import { useInterval } from "./useInterval";
 
 export const framesPerSeconds = (expected: number) => 1000 / expected;
 
-type VerticalDirection = "UP" | "DOWN";
-type HorizontalDirection = "LEFT" | "RIGHT";
-
-export const useBallPosition = () => {
-  const [positionFromLeft, setPositionFromLeft] = useState(0);
+export const useBallPosition = (
+  verticalDirection: VerticalDirection,
+  horizontalDirection: HorizontalDirection,
+  setVerticalDirection: Dispatch<VerticalDirection>,
+  setHorizontalDirection: Dispatch<HorizontalDirection>
+) => {
+  const [positionFromLeft, setPositionFromLeft] = useState(50);
   const [positionFromTop, setPositionFromTop] = useState(0);
-  const [verticalDirection, setVerticalDirection] =
-    useState<VerticalDirection>("DOWN");
-  const [horizontalDirection, setHorizontalDirection] =
-    useState<HorizontalDirection>("RIGHT");
 
+  // needs to match the ball hitbox
   const EDGES = {
     left: 0,
     right: 95,
-    top: 0,
+    top: -2,
     bottom: 95,
   };
 
+  const ballSpeed = 99;
+
   useEffect(() => {
     if (positionFromTop === EDGES.bottom) {
-      alert("perdu !");
+      console.log("perdu !");
     }
   }, [EDGES.bottom, positionFromTop]);
-
-  const ballSpeed = 99;
 
   const randomMovement = (negative = false) => {
     const rndNumber = 1 / (100 - ballSpeed);
@@ -39,13 +39,13 @@ export const useBallPosition = () => {
     const isRightEdge = positionFromLeft >= EDGES.right;
 
     if (isRightEdge) {
-      setHorizontalDirection("LEFT");
+      setHorizontalDirection && setHorizontalDirection("LEFT");
       setPositionFromLeft(positionFromLeft - randomMovement());
       return;
     }
 
     if (isLeftEdge) {
-      setHorizontalDirection("RIGHT");
+      setHorizontalDirection && setHorizontalDirection("RIGHT");
       setPositionFromLeft(positionFromLeft + randomMovement());
       return;
     }
@@ -61,12 +61,12 @@ export const useBallPosition = () => {
     const isAtTheTopEdge = positionFromTop <= EDGES.top;
     const isAtTheBottomEdge = positionFromTop >= EDGES.bottom;
     if (isAtTheBottomEdge) {
-      setVerticalDirection("UP");
+      setVerticalDirection && setVerticalDirection("UP");
       setPositionFromTop(positionFromTop - randomMovement());
       return;
     }
     if (isAtTheTopEdge) {
-      setVerticalDirection("DOWN");
+      setVerticalDirection && setVerticalDirection("DOWN");
       setPositionFromTop(positionFromTop + 1);
       return;
     }
@@ -77,14 +77,12 @@ export const useBallPosition = () => {
   };
 
   useInterval(() => {
-    moveTheBallVertically();
     moveTheBallHorizontally();
-  }, framesPerSeconds(40));
+    moveTheBallVertically();
+  }, framesPerSeconds(60));
 
   return {
     positionFromTop,
     positionFromLeft,
-    setVerticalDirection,
-    verticalDirection,
   };
 };

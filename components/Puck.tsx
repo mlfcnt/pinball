@@ -7,8 +7,9 @@ const PuckStyledComp = styled.div<StyledPuckProps>`
   width: 100px;
   background-color: darkblue;
   position: relative;
-  left: ${(props) => `${props.positionFromLeft}%`};
   top: ${(props) => `${props.positionFromTop}%`};
+  left: ${(props) => `${props.positionFromLeft}%`};
+  margin: auto;
 `;
 
 type Props = {

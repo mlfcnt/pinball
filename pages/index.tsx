@@ -3,65 +3,44 @@ import { Ball } from "../components/Ball";
 import { GameArea } from "../components/GameArea";
 import styled from "styled-components";
 import { Puck } from "../components/Puck";
-import { useEffect, useState } from "react";
-import { useBallPosition } from "../lib/BallPosition";
+import { handleKeyDown } from "../lib/onKeyDown";
+import { usePositions } from "../lib/usePositions";
+import { Bricks } from "../components/Bricks";
+
+export type VerticalDirection = "UP" | "DOWN";
+export type HorizontalDirection = "LEFT" | "RIGHT";
 
 const Home: NextPage = () => {
   const {
-    positionFromTop: ballPosFromTop,
-    positionFromLeft: ballPosFromLeft,
-    verticalDirection,
-    setVerticalDirection,
-  } = useBallPosition();
+    ballPosFromLeft,
+    ballPosFromTop,
+    puckPositionFromLeft,
+    puckPositionFromTop,
+    setPuckPositionFromLeft,
+  } = usePositions();
 
-  const puckPositionFromTop = 90;
-
-  const [puckPosFromLeft, setPuckPosFromLeft] = useState(0);
   const Title = styled.h1`
     text-align: center;
   `;
 
-  useEffect(() => {
-    if (
-      (ballPosFromLeft === puckPosFromLeft + 10 ||
-        ballPosFromLeft === puckPosFromLeft + 11 ||
-        ballPosFromLeft === puckPosFromLeft + 12) &&
-      ballPosFromTop === puckPositionFromTop
-    ) {
-      setVerticalDirection("UP");
-    }
-  }, [ballPosFromLeft, ballPosFromTop, puckPosFromLeft, setVerticalDirection]);
-
-  console.log({
-    ballPosFromLeft,
-    ballPosFromTop,
-    puckPosFromLeft,
-  });
-
-  const handleKeyDown = (code: string) => {
-    switch (code) {
-      case "ArrowRight":
-        setPuckPosFromLeft(puckPosFromLeft + 7);
-        break;
-      case "ArrowLeft":
-        setPuckPosFromLeft(puckPosFromLeft - 7);
-        break;
-      default:
-        break;
-    }
-  };
-
   return (
-    <div tabIndex={0} onKeyDown={({ code }) => handleKeyDown(code)}>
+    <div
+      tabIndex={0}
+      onKeyDown={({ code }) =>
+        handleKeyDown(code, puckPositionFromLeft, setPuckPositionFromLeft)
+      }
+    >
       <Title>Pinball</Title>
       <GameArea>
-        <>
-          <Ball />
-          <Puck
-            positionFromLeft={puckPosFromLeft}
-            positionFromTop={puckPositionFromTop}
-          />
-        </>
+        <Bricks />
+        <Ball
+          positionFromLeft={ballPosFromLeft}
+          positionFromTop={ballPosFromTop}
+        />
+        <Puck
+          positionFromLeft={puckPositionFromLeft}
+          positionFromTop={puckPositionFromTop}
+        />
       </GameArea>
     </div>
   );
